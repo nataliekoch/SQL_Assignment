@@ -84,6 +84,29 @@ app.delete('/data', function(req, res){
     });
 });
 
+app.get("/find", function(req, res) {
+    var results = [];
+    var personName = "%" + req.query.peopleSearch + "%";
+
+    pg.connect(connectionString, function (err, client, done) {
+        var query = client.query("SELECT * FROM people WHERE name ILIKE $1", [personName]);
+
+        query.on('row', function (row) {
+            results.push(row);
+        });
+
+        query.on('end', function () {
+            client.end();
+            return res.json(results);
+        });
+
+        if (err) {
+            console.log(err);
+        }
+    });
+
+})
+
 app.get("/*", function(req,res){
     var file = req.params[0] || "/views/index.html";
     res.sendFile(path.join(__dirname, "./public", file));

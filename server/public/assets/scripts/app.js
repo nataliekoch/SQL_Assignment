@@ -7,7 +7,7 @@ $(document).ready(function(){
          values[field.name] = field.value;
       });
 
-      getData(values);
+      findPerson(values);
    });
 
    $("#addSomeone").submit(addSomeone);
@@ -15,6 +15,17 @@ $(document).ready(function(){
 
    getData();
 });
+
+function findPerson(values) {
+   $.ajax({
+      type: "GET",
+      url: "/find",
+      data: values,
+      success: function(data) {
+         updateDOM(data);
+      }
+   })
+}
 
 function getData(values){
    $.ajax({
